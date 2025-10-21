@@ -1,0 +1,262 @@
+
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user of the ADvisor application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the user."
+        },
+        "email": {
+          "type": "string",
+          "description": "User's email address.",
+          "format": "email"
+        },
+        "role": {
+          "type": "string",
+          "description": "Role of the user (admin, client, demo_user)."
+        },
+        "name": {
+          "type": "string",
+          "description": "The user's display name."
+        },
+        "avatar": {
+          "type": "string",
+          "description": "URL to the user's avatar image."
+        },
+        "lastSeen": {
+          "type": "string",
+          "description": "Timestamp of the user's last activity."
+        },
+        "googleId": {
+          "type": "string",
+          "description": "Google ID of the user, if they signed up with Google."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of when the user account was created."
+        }
+      },
+      "required": ["id", "email", "role"]
+    },
+    "DemoProjection": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "DemoProjection",
+      "type": "object",
+      "description": "Represents a ROI projection generated for a demo user.",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "budget": { "type": "number" },
+        "currentRevenue": { "type": "number" },
+        "roi": { "type": "number" },
+        "campaignType": { "type": "string" },
+        "projectedRoi": { "type": "number" },
+        "projectedRevenueGrowth": { "type": "number" },
+        "completionDate": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "budget", "currentRevenue", "roi", "campaignType", "projectedRoi", "projectedRevenueGrowth", "completionDate"]
+    },
+    "Campaign": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Campaign",
+      "type": "object",
+      "description": "Represents a marketing campaign.",
+      "properties": {
+        "id": { "type": "string" },
+        "clientId": { "type": "string" },
+        "name": { "type": "string" },
+        "platform": { "type": "string" },
+        "budget": { "type": "number" },
+        "startDate": { "type": "string", "format": "date-time" },
+        "endDate": { "type": "string", "format": "date-time" },
+        "roi": { "type": "number" },
+        "status": { "type": "string", "enum": ["Active", "Paused", "Completed"] }
+      },
+      "required": ["id", "clientId", "name", "platform", "budget", "startDate", "endDate", "roi", "status"]
+    },
+    "Chat": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Chat",
+      "type": "object",
+      "description": "Represents a chat thread between a client and an advisor.",
+      "properties": {
+        "id": { "type": "string" },
+        "participants": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Array of user IDs participating in the chat."
+        },
+        "messages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "sender": { "type": "string" },
+              "text": { "type": "string" },
+              "timestamp": { "type": "string", "format": "date-time" }
+            },
+            "required": ["sender", "text", "timestamp"]
+          }
+        }
+      },
+      "required": ["id", "participants", "messages"]
+    },
+    "ChannelSummary": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ChannelSummary",
+      "description": "Stores summarized metrics for a specific marketing channel for a user.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The channel ID, e.g., 'google_ads'."
+        },
+        "name": {
+          "type": "string",
+          "description": "The display name of the channel, e.g., 'Google Ads'."
+        },
+        "period": {
+          "type": "string",
+          "format": "date",
+          "description": "The date for which the summary is recorded (YYYY-MM-DD)."
+        },
+        "spend": { "type": "number" },
+        "revenue": { "type": "number" },
+        "roi": { "type": "number" },
+        "ctr": { "type": "number" },
+        "conversions": { "type": "number" },
+        "leads": { "type": "number" },
+        "traffic": { "type": "number" },
+        "keywords": { "type": "number" },
+        "avgPosition": { "type": "number" },
+        "views": { "type": "number" },
+        "engagement": { "type": "number" },
+        "lastSynced": { "type": "string", "format": "date-time" },
+        "spark": {
+          "type": "array",
+          "items": { "type": "number" }
+        },
+        "insight": { "type": "string" },
+        "source": { "type": "string" }
+      },
+      "required": ["id", "name", "period", "lastSynced"]
+    },
+    "Event": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Event",
+      "description": "Tracks user actions and system events for analytics and auditing.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "uid": { "type": "string" },
+        "type": {
+          "type": "string",
+          "enum": ["sync_triggered", "sync_completed", "forecast_generated", "insight_viewed"]
+        },
+        "channel": { "type": "string" },
+        "ts": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "uid", "type", "ts"]
+    },
+    "Notification": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Notification",
+      "type": "object",
+      "description": "Represents a notification for admins.",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "time": { "type": "string", "format": "date-time" },
+        "isRead": { "type": "boolean" }
+      },
+      "required": ["id", "userId", "title", "description", "time", "isRead"]
+    },
+    "DailyMetric": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "DailyMetric",
+      "description": "Represents a single day's performance metrics for a campaign.",
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "The date for the metric entry (YYYY-MM-DD)."
+        },
+        "spend": { "type": "number" },
+        "impressions": { "type": "number" },
+        "clicks": { "type": "number" },
+        "conversions": { "type": "number" },
+        "uploadedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["date", "spend", "impressions", "uploadedAt"]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous",
+      "google.com"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "schema": { "$ref": "#/entities/User" },
+          "description": "Stores user profile data."
+        }
+      },
+      {
+        "path": "/campaigns/{campaignId}",
+        "definition": {
+          "schema": { "$ref": "#/entities/Campaign" },
+          "description": "Stores marketing campaign data for each user."
+        }
+      },
+       {
+        "path": "/chats/{chatId}",
+        "definition": {
+          "schema": { "$ref": "#/entities/Chat" },
+          "description": "Stores chat threads between clients and advisors."
+        }
+      },
+      {
+        "path": "/campaigns/{campaignId}/daily_metrics/{metricId}",
+        "definition": {
+          "schema": { "$ref": "#/entities/DailyMetric" },
+          "description": "Stores daily performance metrics for a specific campaign."
+        }
+      },
+      {
+        "path": "/channel_summaries/{userId}/summaries/{channelId}",
+        "definition": {
+          "schema": { "$ref": "#/entities/ChannelSummary" },
+          "description": "Stores aggregated metrics for each marketing channel, per user."
+        }
+      },
+      {
+        "path": "/events/{eventId}",
+        "definition": {
+          "schema": { "$ref": "#/entities/Event" },
+          "description": "Stores user actions and system events for analytics and auditing."
+        }
+      },
+      {
+        "path": "/users/{userId}/notifications/{notificationId}",
+        "definition": {
+          "schema": { "$ref": "#/entities/Notification" },
+          "description": "Stores notifications for admins."
+        }
+      }
+    ]
+  }
+}
